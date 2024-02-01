@@ -1,0 +1,54 @@
+import pandas as pd
+traindata = pd.read_csv('train.csv')
+
+########################Univariate Plotting################################
+##Bar charts and categorical data - Univariate graph
+traindata['Age'].value_counts().head(10).plot.bar()
+traindata['Fare'].value_counts().head(10).plot.bar()
+
+## same above graph in terms of percentage
+(traindata['Age'].value_counts().head(10) / len(traindata)).plot.bar()
+
+## Graph based on Ordinal value
+traindata['Pclass'].value_counts().sort_index().plot.bar()
+traindata['Embarked'].value_counts().sort_index().plot.bar()
+traindata['Sex'].value_counts().sort_index().plot.bar()
+
+## Line Charts - if there is too many to fit in bar chart
+traindata['Age'].value_counts().sort_index().plot.line()
+traindata['Fare'].value_counts().sort_index().plot.line()
+
+## Area charts Area charts are just line charts, but with the bottom shaded in. That's it!
+traindata['Age'].value_counts().sort_index().plot.area()
+
+##Interval data Let's move on by looking at yet another type of data, an interval variable.
+##Histograms
+traindata[traindata['Age'] < 50]['Age'].plot.hist()
+traindata[traindata['Fare'] < 50]['Fare'].plot.hist()
+
+## Because they break space up into even intervals, they don't deal very well with skewed data:
+traindata['Fare'].plot.hist()
+traindata['Pclass'].plot.hist()
+
+########################Bivariate Plotting################################
+##Scatter plot
+##The simplest bivariate plot is the lowly scatter plot. A simple scatter plot simply maps each variable of interest to a point in two-dimensional space.
+traindata[traindata['Fare'] < 100].sample(100).plot.scatter(x='Fare', y='Age')
+traindata[traindata['Fare'] < 100].sample(100).plot.scatter(x='Fare', y='Survived')
+traindata[traindata['Age'] < 60].sample(100).plot.scatter(x='Age', y='Pclass')
+
+
+###Hexplot
+##A hexplot aggregates points in space into hexagons, and then colorize those hexagons:
+traindata[traindata['Fare'] < 100].plot.hexbin(x='Fare', y='Age', gridsize=15)
+traindata[traindata['Age'] < 100].plot.hexbin(x='Age', y='Pclass', gridsize=15)
+
+###Stacked plots
+##Scatter plots and hex plots are new. But we can also use the simpler plots we saw in the last notebook.
+##The easiest way to modify them to support another visual variable is by using stacking. A stacked chart is one which plots the variables one on top of the other.
+traindata.plot.bar(stacked=True)
+traindata.plot.area()
+
+## Bivariate line chart
+##One plot type we've seen already that remains highly effective when made bivariate is the line chart. Because the line in this chart takes up so little visual space, it's really easy and effective to overplot multiple lines on the same chart.
+traindata.plot.line()

@@ -1,0 +1,59 @@
+               
+###################third way to compare the file##################################
+import re
+import pandas as pd
+import string as str
+import numpy as np
+import os
+os.getcwd()
+os.chdir('C:\\Users\\tglb2rs\\Documents\\Python Scripts\\filecompare')
+### Loading files into list
+file1 = []
+with open('file1.txt',encoding='utf8', errors='ignore') as file:
+    for linenum , line in enumerate(file):
+                file1.append(line.rstrip('\n'))
+
+### Loading files into list
+file2 = []
+with open('file2.txt',encoding='utf8', errors='ignore') as file:
+    for linenum , line in enumerate(file):
+                file2.append(line.rstrip('\n'))
+
+### Converting files into dataframe
+file1, file2 = pd.DataFrame(file1), pd.DataFrame(file2)
+file1.columns , file2.columns = ['file1'] , ['file2']
+ 
+  
+### Comparing the files - one way side - file1 to file 2
+mismatchfromfile1 = pd.DataFrame(columns = ['linenum','content'])
+for i in range(0,len(file1)):
+    flag=1
+    for j in range(0,len(file2)):
+        if (file1.loc[i,'file1']==file2.loc[j,'file2']):
+            flag=0
+    if(flag==1):
+        mismatchfromfile1=mismatchfromfile1.append({'linenum':i,'content':file1.loc[i,'file1']},ignore_index=True)
+        
+### Comparing the files - another way side - - file2 to file 1
+mismatchfromfile2 = pd.DataFrame(columns = ['linenum','content'])
+for i in range(0,len(file2)):
+    flag=1
+    for j in range(0,len(file1)):
+        if (file2.loc[i,'file2']==file1.loc[j,'file1']):
+            flag=0
+    if(flag==1):
+        mismatchfromfile2=mismatchfromfile2.append({'linenum':i,'content':file2.loc[i,'file2']},ignore_index=True)
+    
+        
+### Join the 2 diff dataframe
+
+finaldf = pd.concat([file1,file2],axis=1)
+finaldf.columns
+
+for j in range(0,len(mismatchfromfile2)):
+    finaldf.loc[mismatchfromfile2.loc[j,'linenum'],'file2']= '<-------MISMATCH------->'   +  finaldf.loc[mismatchfromfile2.loc[j,'linenum'],'file2']     
+    
+
+for j in range(0,len(mismatchfromfile1)):
+    finaldf.loc[mismatchfromfile1.loc[j,'linenum'],'file1']= '<-------MISMATCH------->'   +  finaldf.loc[mismatchfromfile1.loc[j,'linenum'],'file1']     
+

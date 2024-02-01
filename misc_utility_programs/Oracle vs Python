@@ -1,0 +1,149 @@
+Python language is in very much demand because of so rich support from the user community. It is used for all sort of works like data analysis or machine learning programing or to do data related work.
+I, as a database developer struggled a lot initially when I started to leaan python. My first thought was, how can I perform similar database operations using python language.
+While python language is capable of so much, in this article, I have created a cheat sheet for Python code for equivalent Oracle SQL queries. 
+This article will be helpfull of new learners, who are trying to make transition from database platform to python programming or even 
+if they just want to enhance the quality of there work by using exclusive feature, provided by diffirent python pacakages.
+
+--------------------------------------Oracle Queries-------------------------
+---- Drop the table ---
+drop table r_s_emp;
+
+#### Drop the data frame
+del r_s_emp
+
+---- Truncate table
+truncate table r_s_dpt;
+
+#### truncate the data from data frame
+r_s_emp.drop(r_s_emp.index, inplace=True )
+
+---- Create a table ---
+create table r_s_emp (id number, name varchar2(100), salary number);
+
+#### Create EMP table
+import pandas as pd
+r_s_emp = pd.DataFrame(columns={'id','name','salary'})
+
+
+---- insert data in  EMP table
+insert into r_s_emp(id, name, salary) select rownum, 'Employee ' || to_char(rownum), level * 1000 from dual connect by level <= 10000;
+
+#### insert data in EMP table
+for i in  range(1, 100):
+    temp = pd.DataFrame({"id":[i],'name':['Employee'+str(i)],'salary':[i*1000]})
+    r_s_emp= r_s_emp.append(temp,ignore_index=True)
+    
+
+---- create and insert data in DEPT table
+create table r_s_dept (dept_id number, name varchar2(100), dept_head varchar2(100),dept_turnover number); 
+insert into r_s_dept(dept_id,name,dept_head,dept_turnover) values (1,'HR',' Harry Potter',1000000);
+insert into r_s_dept(dept_id,name,dept_head,dept_turnover) values (2,'TECH','John Wick',2000000);
+insert into r_s_dept(dept_id,name,dept_head,dept_turnover) values (3,'OPT','Ethan Hunt',3000000);
+insert into r_s_dept(dept_id,name,dept_head,dept_turnover) values (4,'Accounts','Ethan Hunt',4000000);
+commit;
+
+#### Insert data in DEPT table
+r_s_dept = pd.DataFrame({'dept_id':[1,2,3,4],'name':['HR','TECH','OPT','Accounts'],'dept_head':['Harry Potter','john wick','john rambo','ethan hunt'],'dept_turnover':[200000,300000,400000,500000]})
+
+---- Alter a table---
+alter table r_s_emp add  (dept varchar2(255), create_date date);
+
+---- Enter data in emp table for DEPT column----
+update r_s_emp set dept='HR', create_date='16-AUG-19 22.03.03' where id>1 and id <3000;
+update r_s_emp set dept='TECH' , create_date='15-AUG-19 22.03.03' where id>3001 and id <6000;
+update r_s_emp set dept='OPT' , create_date='14-AUG-19 22.03.03' where id>=6000 and id <=10000;
+update r_s_emp set dept='FOOD' , create_date = sysdate where dept is null; commit;
+
+
+#### Function for adding 2 new column and populate there values
+def dept(num) :
+    if (num >1) and (num <3000) :
+        return 'HR'
+    elif (num >3000) and (num <6000):
+        return 'TECH'
+    elif (num >6000) and (num <=10000):
+        return 'OPT'
+    else :
+        return 'Food'
+
+def create_date(num) :
+    if (num >1) and (num <3000) :
+        return '16-AUG-19 22.03.03'
+    elif (num >3000) and (num <6000):
+        return '17-AUG-19 22.03.03'
+    elif (num >6000) and (num <=10000):
+        return '18-AUG-19 22.03.03'
+    else :
+        return '19-AUG-19 22.03.03'
+ 
+#### Calling the function and adding the values
+r_s_emp['dept'] = r_s_emp['id'].apply(dept)
+r_s_emp['create_date'] = r_s_emp['id'].apply(create_date) 
+
+
+-----select from table----
+select * from r_s_emp;
+
+-----Unique value for the column----
+select distinct dept from r_s_emp;
+
+#### Unique value for the column
+r_s_emp['dept'].unique()
+
+-----select from table---- top 5 rows
+select * from r_s_emp where rownum <=5;
+
+#### top 5 rows
+r_s_emp.head()
+
+-----select from table---- last 5 rows
+select * from (select * from r_s_emp order by id desc) where rownum <=5;
+
+### botttom 5 rows
+r_s_emp.tail()
+
+----- group by on 1 column
+select dept, count(*) from r_s_emp group by dept;
+
+##### Group by one one column
+r_s_emp[['id','dept']].groupby('dept').count().reset_index().rename(columns={'id':'count'})
+
+----- group by on 2 column
+select dept,create_date, count(*) from r_s_emp group by dept, create_date;
+
+###### Group by on 2 columns
+r_s_emp[['id','dept','create_date']].groupby(['dept','create_date']).count().reset_index().rename(columns={'id':'count'})
+
+------ group by and aggregate 
+select dept, sum(salary) Total_sal_dept_wise from r_s_emp group by dept;
+
+###### Group by and aggregate
+r_s_emp[['salary','dept']].groupby('dept').sum().reset_index().rename(columns={'salary':'total_salary'})
+
+---- select from the table
+select * from r_s_emp;
+
+#### show records from python data frame
+print(r_s_emp.head())
+
+----- Left join between Emp and Dept
+select emp.name ,emp.dept emp_dept_nm, dept.name dept_nm, dept_head  from r_s_emp emp left join r_s_dept dept on emp.dept = dept.name where dept.name is null;
+
+##### left join between employee and dept
+result = pd.merge(r_s_emp,r_s_dept, left_on='dept',right_on='name',how='left')
+len(result)
+
+----- right join between emp and dept
+select emp.name ,emp.dept emp_dept_nm, dept.name dept_nm, dept_head  from r_s_emp emp right join r_s_dept dept on emp.dept = dept.name where emp.dept is null;
+
+##### right join between employee and dept
+result = pd.merge(r_s_emp,r_s_dept, left_on='dept',right_on='name',how='right')
+len(result)
+----- full outer join between emp and dept
+select emp.name ,emp.dept emp_dept_nm, dept.name dept_nm, dept_head  from r_s_emp emp full join r_s_dept dept on emp.dept = dept.name 
+where dept.name is null or emp.dept  is null ;
+
+###### full join between employee and dept
+result = pd.merge(r_s_emp,r_s_dept, left_on='dept',right_on='name',how='outer',indicator='True')
+print(result.head())
+print('length of merge result='+str(len(result)))

@@ -1,0 +1,191 @@
+E360 view
+--------------
+Smart search.
+        - Can configure unique layout for the role
+	- Or can configure the same layout for multiple role
+	- Entry point is from IDD search result and data view
+	- Built on top of composite objects
+	- its read only view, not editable
+Main area
+	- 3 columns wide
+	- multiple componenets can be placed in main area
+tool area
+	- 1 column wide , at the right side
+
+Predifined components:-
+-------------------------
+	Data View - Display the data of the root node of the composite object. The component name in configuration file is RootCO.
+	Match     - Display records whihc match the entity. The componenet name in the configuration file is MatchMerge
+	Related records  - Display the records that related to the entity. The componenet name in the configuration file is GetOneHop.
+	Cross-Reference systems - Display the source systems that contributed to the entity data. the componenet name in the configuration file is XrefSystes
+
+Custom Components:-
+--------------------
+	External Link - An inline frame that embeds an external web page, or you can use HTML code and java-script. The componenet name in the configuration file is External-Link.
+
+To configure the E360, we need to do the changes in C_REPOS_COMPONENT_INSTANCE
+
+Configuring E360
+-----------------------
+Entity 360 degree is mainly configured from C_REPOS_CO_CS_CONFIG and C_REPOS_COMPONENT_INSTANCE and where the rowid_data 
+is the key of how you organize the data to display on screen for a subject area or displaying multiple source systems or 
+displaying external links. Just enable the 360 degree view in cmxserver.properties and enter data to C_REPOS_*_INSTANCE that 
+should let u open the 360 degree view as needed. Required xml u need to insert into INSTANCE table since you are using oracle 
+u have to do conversion using oracle provided packages.
+
+
+Overview of Informatica MDM - Customer 360
+----------------------------------------------
+Informatica MDM - Customer 360 provides clean, consistent, and connected information about customers. Business managers use the master customer data to make better business decisions about customers and manage customer relationships. You can get a single trusted view of a customer.
+With Customer 360, business users can achieve the following goals:
+		Streamline the customer onboarding and qualification process.
+		Centralize the data about customers in a master database.
+		View the relationships between customers, parent companies, subsidiaries, and related organizations.
+		Design campaigns based on customer preferences and behavior.
+		Improve customer service.
+		Connect customer data to the product catalogs and view the buying patterns.
+		View customer-to-product relationships.
+		
+Customer 360 is based on Multidomain MDM. Business users connect to master customer data through a business-friendly user interface. 
+The user interface displays an enterprise-level dashboard as well as 360 degree customer views that are customized for different business users.
+The Customer 360 environment integrates with Informatica Product 360, which is a product information management system.
+Use Customer 360 to access the master data that is stored in the Hub Store. Master data is organized by business entities. 
+Business entities are the type of top-level data that has significance for an organization. 
+Business entities include persons and organizations.
+
+	Business users use Customer 360 to perform the following activities:
+		Add records.
+		Search for and edit records.
+		Manage relationships between records.
+		Participate in review processes for new and changed records.
+		Import records in bulk to create new customers.
+		
+
+The Home page is your dashboard and monitoring page that displays a list of tasks and a collection of charts and graphs.
+The Home page contains the following components:
+	Task Inbox - After a business user creates or edits record data, the action initiates a business process. The business process generates tasks to managers to participate in the review process. The task inbox displays tasks that you claim and all unclaimed tasks.
+	Drafts and Submissions - After you create or edit record data, you can save the form as draft to submit later. Users can view only their drafts and submitted forms.
+	Charts and Graphs - Charts and graphs include tasks overview, customer onboarding time, customers added by year, and source systems.
+
+
+
+
+Hiearchy Manager setup
+---------------------------
+When we configure for the hiearchy table
+we can Upload entity Icon
+
+3 extra table gets created while creating hierarchy
+		1) Rbo Bo Class
+			Base Object class code 
+			Base Object Class Description
+		
+		2) Rbo Hierarchy
+		3) Rbo Rel Type
+
+
+Need to create the Display Query for all above 3 table - Select all the columns
+
+Next right click on Entity Objects
+	select "Convert BO to EntityRelationship objects"
+	select BO and convert to entity
+	select "Existing Object column to use" Choose "Create New Column" - It should be Physical name - BO_CLASS_CODE
+		Do the same for all the BO
+
+You can also create the new BO from Hierachy manager and add the columns later
+Next - for each BO table set up the look up table for Base Object Class Code - Set up with the Rbo Class Code
+Under Hiearchy manager - you need to create entity type under each entity - Give the name , choose the color and Icons
+Under Hiearchy manager - Add Hierarchy like Employer or product
+Under Hiearchy manager - create realtionship objects can use existing relationship BOs
+under hiearchy Manager - Create Packages under profile - configure all the details like Label, Search 
+
+SAM
+-----
+Roles - Can create the roles and assign resource privileges to it	
+users and Groups - 
+	Can assign roles to group or user
+can also provide external authetication under password policy
+
+example - Resource(Package.C_PTY Secure) -> Privileges(C_PTY-read, create, update) -> Role(Data Steward) ->User(Rajeev Singh)
+
+Provisioning tool(Modelling using the provisioning tool)
+------------------
+tool to crate business entity models
+to create a root node and then establish relationships between nodes to create business entity model
+create foreign key constraints
+After you build the business entity model and configure the nodes you can publish the configuration to MDM Hub
+
+can access using following URL - servername:port/provisioning
+Business Entities - PTY, ADDR
+Reference Entitites - PTY_TP, ADDR_TP
+Create business entitites and reference entities based on requirement
+
+
+Active VOS
+------------
+Active VOS provides automation platform to develop, integrate and deploy business process applications.
+Allows Quick development using Out of Bos workflows.
+
+Prequsite
+----------
+App Server should be up and running
+It can be installed as part of MDM installation or can be installed seperatly after MDM installation
+
+
+Configuration
+--------------
+create user like (abAdmin, abTaskClient, DataSteward, SrManager, Manager, abTrust)  for Active vos in either Jboss or websphere
+Need to register BeActiveVOS instance in MDM Hub
+Created required roles in MDM - Manager, Senior Manager, Data Steward
+Assign Users to specific roles
+
+Configure Identity Service under Admin from ActiveVos URL. It should be MDM. Provider is MDM, Provide credentials
+
+test for all the users like DS1. Is the test is successfull, it means its integrated successfully.
+
+Go to MDM Hub
+--------------
+Created required roles in MDM - Manager, Senior Manager, Data Steward
+Then go to workflow manager -
+ Select the BEActiveOS workflow adapter
+Then go to Workflow Engines -
+ select the Be ActiveVos workflow Engine - if adding new engine  then provide all the other details like port, host and active VOS credentials and test the connection.
+
+
+
+---------Apache ZooKeeper---------------
+What is the use of ZooKeeper in MDM?
+Answer - Zookeeper is applicable only if you enable smart search in IDD. If smart search is not enabled, Zookeeper does not play any role in MDM.
+
+Zookeeper (Apache) is a centralized server that enables coordination between multiple servers in a distrbuted environment. 
+
+In MDM's case, it is used to manage the coordination between mulitple process servers that would participate on the smart search. Generally, when multiple process servers are used, the smart search indexes are distributed across the process server nodes. Hence, Zookeeper acts as a central coordinator that synchronizes the searches across these process server nodes.
+
+Zookeeper configuration:-
+
+Need to configure the process server
+	Enable Zookeeper peroperties
+	Zookeeper client port
+	Zookeeper ID
+	Zookeeper Data Directory
+
+Chnage the CMXcleanse Properties
+	SS.enabled = True
+
+Chnage the CMXServer properties
+	ss.enabled =true
+
+then restart the server
+then check the solr consol
+	URL - localhost:8080/MDESolr/
+	
+
+
+
+
+
+
+
+	
+
+	
