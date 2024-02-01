@@ -1,0 +1,5 @@
+# functions-framework==3.*
+bs4
+requests
+google.cloud
+google-cloud-storage
