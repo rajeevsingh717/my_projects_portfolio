@@ -1,0 +1,25 @@
+Account_Name,Type,Company,Isactive
+Delta SkyMiles Gold Card,Credit card,american express delta,yes
+American Express Gold Card,Credit card,american express gold,yes
+Adv Plus Banking - 9491,Bank Account,bank of america,yes
+One Deposit Savings,Bank Account,citizen bank,yes
+Individual - TOD,Bank Account,fidelity,yes
+Individual Brokerage,Brokerage,etrade,yes
+Health Savings Account,Brokerage,fidelity,yes
+Roth IRA,Brokerage,etrade,yes
+Delta SkyMiles Gold Card - Supplementary account,Credit card,american express delta,yes
+Additional Gold Card - Supplementary account,Credit card,american express gold,yes
+High Yield Savings Acct,Bank Account,american express,yes
+Credit Card,Credit card,victoria secret,yes
+One Deposit Checking,Bank Account,citizen bank,yes
+401(k) Plan Balance,Brokerage,ubiquity,yes
+RETAIL BUSINESS SVCS,Brokerage,fidelity,yes
+Primary Savings,Bank Account,dcu,yes
+CREDITCARD Account,Credit card,bank of america,yes
+Discover,Credit card,discover,yes
+Free Checking,bank Account,dcu,yes
+CFNA Credit First Card,Credit card,firestone,yes
+Advantage Savings - 5858,bank Account,bank of america,no
+Amazon Prime Store Card,Credit card,Amazon,yes
+Adv Relationship Banking - 9491,bank Account,bank of america,yes
+DCU Visa,Credit card,dcu,yes
