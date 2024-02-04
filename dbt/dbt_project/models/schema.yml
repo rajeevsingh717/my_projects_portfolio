@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: customer
+    description: "customer table with order detail"
+    columns:
+      - name: customer_id
+        description: "The primary key for this table"
+        tests:
+          - unique
+          - not_null  
+  
+  - name: stg_orders
+    description: "customer table with order detail"
+    columns:
+      - name: order_id
+        description: "The primary key for this table"
+        tests:
+          - unique
+          - not_null  
+      - name: order_status
+        description: "status of the order"
+        tests:
+          - accepted_values:
+              values: [returned, completed, return_pending, shipped, placed]
+          
